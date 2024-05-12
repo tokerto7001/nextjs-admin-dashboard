@@ -7,13 +7,14 @@ import { Label } from "@/components/ui/label";
 import FormButton from "../shared/form-button";
 import * as actions from '@/actions/authentication';
 import { useFormState } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useToast } from "../ui/use-toast";
 
 export default function LoginForm(){
 
     const { toast } = useToast();
     const [formState, action] = useFormState(actions.login, {error: {}});
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if(formState.error.toastError) {
@@ -21,18 +22,20 @@ export default function LoginForm(){
                 description: formState.error.toastError,
                 variant: 'destructive'
             })
+            formRef.current!.reset();
         }
         if(formState.success) {
             toast({
                 description: 'User login successfull!',
                 variant: 'success'
             })
+            formRef.current!.reset();
         }
     }, [formState]);
 
     return (
         <div className="container w-96 border border-yellow-500 rounded-xl h-96 bg-neutral-300 flex justify-center items-center">
-            <form action={action}>
+            <form ref={formRef} action={action}>
                 <div className="flex flex-col gap-4 w-64 text-center">
                     <div>
                         <Label htmlFor="email">Email</Label>
