@@ -9,6 +9,7 @@ import * as actions from '@/actions/authentication';
 import { useToast } from "../ui/use-toast";
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
+import { redirect } from "next/navigation";
 
 export default function RegisterForm(){
 
@@ -31,6 +32,7 @@ export default function RegisterForm(){
                 variant: 'success'
             });
             formRef.current!.reset();
+            redirect('/login')
         }
     }, [formState]);
 
