@@ -28,7 +28,7 @@ export default function LoginForm(){
                     </div>
                 </div>
                 <div className="mt-3 flex flex-col gap-1 justify-center">
-                <Link className="text-sm m-auto" href='/register'>Already have an account?</Link>
+                <Link className="text-sm m-auto" href='/register'>Dont have an account?</Link>
                 <FormButton>
                     Login
                 </FormButton>
