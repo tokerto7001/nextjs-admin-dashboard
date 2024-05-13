@@ -9,10 +9,6 @@ export default async function Home() {
   return (
       <div>
         Dashboard
-        <form action={logout}>
-          <Button type="submit">Logout</Button>
-        </form>
-        {session.id}
       </div>
   );
 }

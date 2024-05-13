@@ -2,6 +2,9 @@
   @tailwind components;
   @tailwind utilities;
 
+  body{
+    background-color: rgb(15 23 42);
+  }
   @layer base {
     :root {
       --background: 0 0% 100%;
