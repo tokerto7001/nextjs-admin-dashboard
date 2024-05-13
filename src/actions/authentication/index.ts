@@ -2,8 +2,14 @@
 
 import { db } from "@/db";
 import { compare, hash } from "@/utils/bcryptHelpers";
-import { jwtSign } from "@/utils/jwtHelpers";
+import { jwtSign, jwtVerify } from "@/utils/jwtHelpers";
+import { cookies } from "next/headers";
 import { z } from "zod";
+
+export interface SessionObject {
+    id: number;
+    isAdmin: boolean;
+}
 
 export interface RegisterFormState {
     success?: boolean;
@@ -58,11 +64,11 @@ export async function register(formState: RegisterFormState, formData: FormData)
             }
         }
     
-        const encryptedPassword = await hash(validationResult.data.password);
+        const hashedPassword = await hash(validationResult.data.password);
         await db.user.create({
             data: {
                 email: validationResult.data.email,
-                password: encryptedPassword,
+                password: hashedPassword,
                 isAdmin: true
             }
         })
@@ -106,7 +112,7 @@ export async function login(formState: LoginFormState, formData: FormData): Prom
         email,
         password
     });
-    if(!validationResult.success) {
+    if(!validationResult.success) {
         return {
             error: validationResult.error.flatten().fieldErrors
         }
@@ -132,6 +138,14 @@ export async function login(formState: LoginFormState, formData: FormData): Prom
                 toastError: 'Wrong email or password!'
             }
         }
+    
+        const sessionObject = {
+            id: user.id,
+            isAdmin: user.isAdmin
+        };
+        const encryptedSession = jwtSign<SessionObject>(sessionObject, '24h');
+
+        cookies().set('session', encryptedSession, { httpOnly: true, expires: new Date(Date.now() + 86400000) });
     }catch(err: any){
         return {
             error: {
@@ -140,9 +154,18 @@ export async function login(formState: LoginFormState, formData: FormData): Prom
         }
     }
 
-
     return {
         success: true,
         error: {}
     }
+}
+
+export async function getSession(): Promise<SessionObject | null> {
+    const session = cookies().get('session')?.value;
+    if(!session) return null;
+    return jwtVerify(session);
+}
+
+export async function logout(){
+    cookies().set('session', '', { expires: new Date(0) });
 }

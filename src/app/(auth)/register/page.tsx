@@ -1,5 +1,4 @@
 import RegisterForm from "@/components/authentication/register-form";
-import { redirect } from "next/navigation";
 
 export default async function RegisterPage(){
 
