@@ -37,7 +37,7 @@ export default function RegisterForm(){
     }, [formState]);
 
     return (
-        <div className="container w-96 border border-yellow-500 rounded-xl h-1/2 bg-neutral-300 items-center flex justify-center">
+        <div className="container w-[28%] rounded h-1/2 bg-[#F5F5F5] items-center flex justify-center">
             <form ref={formRef} action={action}>
                 <div className="flex flex-col gap-4 w-64 text-center">
                     <div className="flex flex-col gap-2">

@@ -15,6 +15,7 @@ export default function FormButton({children}: FormButtonProps){
     return (
         <Button
             type="submit"
+            className="bg-[#001628]"
         >
             {
                 pending ? <Loader2 /> : children

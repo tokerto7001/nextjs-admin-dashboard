@@ -34,7 +34,7 @@ export default function LoginForm(){
     }, [formState]);
 
     return (
-        <div className="container w-96 border border-yellow-500 rounded-xl h-96 bg-neutral-300 flex justify-center items-center">
+        <div className="container w-[28%] rounded h-96 bg-[#F5F5F5] flex justify-center items-center">
             <form ref={formRef} action={action}>
                 <div className="flex flex-col gap-4 w-64 text-center">
                     <div>
