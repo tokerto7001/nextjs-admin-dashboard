@@ -37,7 +37,7 @@ export default async function CoursesPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {courses.map((course, idx) => (
+          {courses.map((course) => (
             <Link href={`/courses/${course.id}`} key={course.id} legacyBehavior>
               <TableRow className="cursor-pointer">
                 <TableCell>{course.id}</TableCell>
