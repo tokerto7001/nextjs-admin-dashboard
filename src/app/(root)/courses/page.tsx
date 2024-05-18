@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { convertStoM } from "@/utils/convertStoM";
+import Image from "next/image";
 
 export default async function CoursesPage() {
   const courses = await db.course.findMany({
@@ -17,6 +18,7 @@ export default async function CoursesPage() {
       title: true,
       description: true,
       duration: true,
+      imageName: true
     },
   });
 
@@ -27,6 +29,7 @@ export default async function CoursesPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
+            <TableHead></TableHead>
             <TableHead>Title</TableHead>
             <TableHead className="text-center">Description</TableHead>
             <TableHead>Duration</TableHead>
@@ -36,6 +39,14 @@ export default async function CoursesPage() {
           {courses.map((course, idx) => (
             <TableRow key={course.id}>
               <TableCell>{course.id}</TableCell>
+              <TableCell>
+                <Image
+                  src={`/${course.imageName}`}
+                  alt="Course Image"
+                  width={75}
+                  height={75}
+                />
+              </TableCell>
               <TableCell>{course.title}</TableCell>
               <TableCell>{course.description}</TableCell>
               <TableCell>{convertStoM(course.duration)}</TableCell>

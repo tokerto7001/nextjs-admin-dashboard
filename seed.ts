@@ -63,17 +63,20 @@ const main = async() => {
                 {
                     title: 'Javascript',
                     description: 'Comprehend the spectacular world of Javascript and its asyncronous arthitecture.',
-                    duration: 237162
+                    duration: 23716,
+                    imageName: 'javascript.png'
                 },
                 {
                     title: 'Typescript',
                     description: 'Comprehend the spectacular world of Typescript and how it is created as a superset of Javascript.',
-                    duration: 128721
+                    duration: 12872,
+                    imageName: 'typescript.jpg'
                 },
                 {
                     title: 'Nodejs',
                     description: 'Comprehend the spectacular world of Nodejs and how to create a web server listening for requests.',
-                    duration: 312836
+                    duration: 31283,
+                    imageName: 'nextjs.png'
                 }
             ],
             skipDuplicates: true

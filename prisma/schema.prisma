@@ -23,9 +23,10 @@ model User {
 
 model Course {
   id Int @id @default(autoincrement())
-  title String
+  title String @unique
   description String
   duration Int //seconds
+  imageName String
   enrolledUsers  UserCourses[]
 }
 
