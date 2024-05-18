@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { convertStoM } from "@/utils/convertStoM";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function CoursesPage() {
   const courses = await db.course.findMany({
@@ -18,7 +19,7 @@ export default async function CoursesPage() {
       title: true,
       description: true,
       duration: true,
-      imageName: true
+      imageName: true,
     },
   });
 
@@ -37,20 +38,22 @@ export default async function CoursesPage() {
         </TableHeader>
         <TableBody>
           {courses.map((course, idx) => (
-            <TableRow key={course.id}>
-              <TableCell>{course.id}</TableCell>
-              <TableCell>
-                <Image
-                  src={`/${course.imageName}`}
-                  alt="Course Image"
-                  width={75}
-                  height={75}
-                />
-              </TableCell>
-              <TableCell>{course.title}</TableCell>
-              <TableCell>{course.description}</TableCell>
-              <TableCell>{convertStoM(course.duration)}</TableCell>
-            </TableRow>
+            <Link href={`/courses/${course.id}`} key={course.id} legacyBehavior>
+              <TableRow className="cursor-pointer">
+                <TableCell>{course.id}</TableCell>
+                <TableCell>
+                  <Image
+                    src={`/${course.imageName}`}
+                    alt="Course Image"
+                    width={75}
+                    height={75}
+                  />
+                </TableCell>
+                <TableCell>{course.title}</TableCell>
+                <TableCell>{course.description}</TableCell>
+                <TableCell>{convertStoM(course.duration)}</TableCell>
+              </TableRow>
+            </Link>
           ))}
         </TableBody>
       </Table>
