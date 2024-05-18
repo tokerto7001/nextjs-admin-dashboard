@@ -11,7 +11,6 @@ import {
 import { redirect } from "next/navigation";
 import Pagination from "@/components/shared/pagination";
 
-  
 interface UsersPageProps {
     searchParams: {
         page: string;
@@ -22,8 +21,6 @@ export default async function UsersPage({searchParams}: UsersPageProps){
     const { page = 1 } = searchParams;
     if(isNaN(+page)) redirect('/users')
     const offset = (+page - 1) * 10; 
-
-    // console.log(+page - 1 < 1)
 
     const users = await db.user.findMany({
         select: {
@@ -50,7 +47,7 @@ export default async function UsersPage({searchParams}: UsersPageProps){
             {
                 users.map((user, idx) => (
                     <TableRow key={user.id}>
-                    <TableCell>{idx + 1}</TableCell>
+                    <TableCell>{user.id}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.isAdmin ? 'TRUE' : 'FALSE'}</TableCell>
                     </TableRow>

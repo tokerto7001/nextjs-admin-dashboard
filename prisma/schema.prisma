@@ -25,7 +25,7 @@ model Course {
   id Int @id @default(autoincrement())
   title String
   description String
-  duration BigInt //seconds
+  duration Int //seconds
   enrolledUsers  UserCourses[]
 }
 
