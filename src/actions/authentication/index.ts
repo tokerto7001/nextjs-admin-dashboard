@@ -130,6 +130,13 @@ export async function login(formState: LoginFormState, formData: FormData): Prom
                 toastError: 'Wrong email or password!'
             }
         }
+
+        if(!Boolean(user.isAdmin)) return {
+            success: false,
+            error: {
+                toastError: 'Unauthorized!'
+            }
+        }
     
         const passwordsMatch = await compare(user.password, validationResult.data.password);
         if(!passwordsMatch) return {
