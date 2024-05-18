@@ -28,12 +28,26 @@ export default async function CoursePage({ params }: CoursePageProps) {
   });
   if (!course) return notFound();
 
+
+  const enrolledUsers = await db.userCourses.findMany({
+    where: {
+        courseId: +id
+    },
+    include: {
+        user: {
+            select: {
+                email: true,
+            }
+        }
+    },
+  });
+
   return (
     <div className="m-20 flex justify-between">
       <Card className="w-96 h-96 shadow-lg">
         <CardHeader>
           <CardTitle className="text-center">{course.title}</CardTitle>
-          <CardDescription className="flex justify-center items-center !mt-5">
+          <CardDescription className="flex justify-center items-center">
             <Image
                 src={`/${course.imageName}`}
                 alt="Course Image"
@@ -42,24 +56,32 @@ export default async function CoursePage({ params }: CoursePageProps) {
             />
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-center mt-4">
+        <CardContent className="flex items-center justify-center">
           <p>{course.description}</p>
         </CardContent>
-        <CardContent className="flex items-center justify-center mt-4">
+        <CardContent className="flex items-center justify-center">
+          <p>{enrolledUsers.length} user(s) enrolled this course</p>
+        </CardContent>
+        <CardContent className="flex items-center justify-center">
           <p>{convertStoM(course.duration)}</p>
         </CardContent>
       </Card>
-      <Card className="w-96 h-96">
+      <Card className="w-96 h-96 shadow-lg overflow-scroll">
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
+          <CardTitle className="text-center">Enrolled Users</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Card Content</p>
+            <div className="flex flex-col gap-3 p-2 over">
+            {
+                enrolledUsers.length && enrolledUsers.map((enrolledUser) => (
+                        <div key={enrolledUser.id} className="flex justify-between">
+                            <p>{enrolledUser.user.email}</p>
+                            <p>{enrolledUser.isCompleted ? 'Completed' : 'Uncompleted'}</p>
+                        </div>
+                ))
+            }
+            </div>
         </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
       </Card>
     </div>
   );

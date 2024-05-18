@@ -81,6 +81,77 @@ const main = async() => {
             ],
             skipDuplicates: true
         });
+
+        await db.userCourses.createMany({
+            data: [
+                {
+                    userId: 1,
+                    courseId: 1,
+                    isCompleted: false
+                },
+                {
+                    userId: 1,
+                    courseId: 2,
+                    isCompleted: false
+                },
+                {
+                    userId: 1,
+                    courseId: 3,
+                    isCompleted: true
+                },
+                {
+                    userId: 2,
+                    courseId: 1,
+                    isCompleted: false
+                },
+                {
+                    userId: 2,
+                    courseId: 3,
+                    isCompleted: false
+                },
+                {
+                    userId: 3,
+                    courseId: 1,
+                    isCompleted: false
+                },
+                {
+                    userId: 3,
+                    courseId: 3,
+                    isCompleted: false
+                },
+                {
+                    userId: 4,
+                    courseId: 2,
+                    isCompleted: false
+                },
+                {
+                    userId: 4,
+                    courseId: 3,
+                    isCompleted: false
+                },
+                {
+                    userId: 7,
+                    courseId: 2,
+                    isCompleted: false
+                },
+                {
+                    userId: 8,
+                    courseId: 3,
+                    isCompleted: false
+                },
+                {
+                    userId: 9,
+                    courseId: 1,
+                    isCompleted: false
+                },
+                {
+                    userId: 10,
+                    courseId: 3,
+                    isCompleted: true
+                },
+            ],
+            skipDuplicates: true
+        })
     } catch(err: any) {
         console.log('Error occurred when trying to seed', err.message)
     }
