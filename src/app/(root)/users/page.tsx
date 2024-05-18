@@ -9,15 +9,8 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { redirect } from "next/navigation";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-  } from "@/components/ui/pagination"
+import Pagination from "@/components/shared/pagination";
+
   
 interface UsersPageProps {
     searchParams: {
@@ -55,9 +48,9 @@ export default async function UsersPage({searchParams}: UsersPageProps){
             </TableHeader>
             <TableBody>
             {
-                users.map((user) => (
+                users.map((user, idx) => (
                     <TableRow key={user.id}>
-                    <TableCell>{user.id}</TableCell>
+                    <TableCell>{idx + 1}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.isAdmin ? 'TRUE' : 'FALSE'}</TableCell>
                     </TableRow>
@@ -66,16 +59,12 @@ export default async function UsersPage({searchParams}: UsersPageProps){
 
             </TableBody>
             </Table>
-            <Pagination>
-                <PaginationContent>
-                    <PaginationItem>
-                    <PaginationPrevious disabled={+page - 1 < 1} href={`/users?page=${+page - 1}`} />
-                    </PaginationItem>
-                    <PaginationItem>
-                    <PaginationNext disabled={users.length < 10} href={`/users?page=${+page + 1}`} />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+            <Pagination
+                previousDisabled={Boolean(+page - 1 < 1)}
+                nextDisabled={users.length < 10}
+                previousHref={`/users?page=${+page - 1}`}
+                nextHref={`/users?page=${+page + 1}`}
+            />
         </div>
     )
 };

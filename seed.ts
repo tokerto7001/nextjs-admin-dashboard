@@ -56,7 +56,28 @@ const main = async() => {
                 },
             ],
             skipDuplicates: true
-        })
+        });
+
+        await db.course.createMany({
+            data: [
+                {
+                    title: 'Javascript',
+                    description: 'Comprehend the spectacular world of Javascript and its asyncronous arthitecture.',
+                    duration: 237162
+                },
+                {
+                    title: 'Typescript',
+                    description: 'Comprehend the spectacular world of Typescript and how it is created as a superset of Javascript.',
+                    duration: 128721
+                },
+                {
+                    title: 'Nodejs',
+                    description: 'Comprehend the spectacular world of Nodejs and how to create a web server listening for requests.',
+                    duration: 312836
+                }
+            ],
+            skipDuplicates: true
+        });
     } catch(err: any) {
         console.log('Error occurred when trying to seed', err.message)
     }
