@@ -11,6 +11,15 @@ import {
 import { convertStoM } from "@/utils/convertStoM";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default async function CoursesPage() {
   const courses = await db.course.findMany({
@@ -25,6 +34,22 @@ export default async function CoursesPage() {
 
   return (
     <div className="p-5 mt-3">
+      <div className="flex justify-end mb-4">
+        <Dialog>
+          <DialogTrigger>
+            <Button>Add Course</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create a new course</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
       <Table>
         <TableCaption>A list of courses.</TableCaption>
         <TableHeader>
