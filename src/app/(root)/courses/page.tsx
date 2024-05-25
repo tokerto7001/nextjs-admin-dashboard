@@ -40,17 +40,13 @@ export default async function CoursesPage() {
           <DialogTrigger asChild>
             <Button>Add Course</Button>
           </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="text-center">
-                Create a new course
-              </DialogTitle>
-              <DialogDescription asChild>
-                <div className="h-96 p-5 flex justify-center">
-                  <CreateCourseForm />
+          <DialogContent className="h-[70%] flex items-center justify-center">
+              <DialogDescription asChild className="h-[90%]">
+                <div>
+                <h3 className="text-center text-black font-bold mb-2">Create a new course</h3>
+                <CreateCourseForm />
                 </div>
               </DialogDescription>
-            </DialogHeader>
           </DialogContent>
         </Dialog>
       </div>
