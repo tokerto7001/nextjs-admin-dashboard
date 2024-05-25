@@ -51,8 +51,8 @@ export default async function CoursePage({ params }: CoursePageProps) {
             <Image
                 src={`/${course.imageName}`}
                 alt="Course Image"
-                width={200}
-                height={200}
+                width={100}
+                height={100}
             />
           </CardDescription>
         </CardHeader>
@@ -66,7 +66,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           <p>{convertStoM(course.duration)}</p>
         </CardContent>
       </Card>
-      <Card className="w-96 h-96 shadow-lg overflow-scroll">
+      <Card className="w-96 h-96 shadow-lg overflow-scroll no-scrollbar">
         <CardHeader>
           <CardTitle className="text-center">Enrolled Users</CardTitle>
         </CardHeader>
