@@ -7,7 +7,11 @@ import { useFormState } from "react-dom";
 import { useEffect, useRef } from "react";
 import { useToast } from "../ui/use-toast";
 
-export default function CreateCourseForm() {
+interface CreateCourseFormProps {
+    setDialogState: (state: boolean) => void;
+}
+
+export default function CreateCourseForm({setDialogState}: CreateCourseFormProps) {
   const [formState, action] = useFormState(createCourse, { error: {} });
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
@@ -25,7 +29,8 @@ export default function CreateCourseForm() {
         toast({
             description: 'Course created successfully',
             variant: 'success'
-        })
+        });
+        setDialogState(false);
     }
   }, [formState]);
 

@@ -12,15 +12,7 @@ import { convertStoM } from "@/utils/convertStoM";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import CreateCourseForm from "@/components/courses/create-course-form";
+import CreateCourseDialog from "@/components/courses/create-course-dialog";
 
 export default async function CoursesPage() {
   const courses = await db.course.findMany({
@@ -36,19 +28,7 @@ export default async function CoursesPage() {
   return (
     <div className="p-5 mt-3">
       <div className="flex justify-end mb-4">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Add Course</Button>
-          </DialogTrigger>
-          <DialogContent className="h-[70%] flex items-center justify-center">
-              <DialogDescription asChild className="h-[90%]">
-                <div>
-                <h3 className="text-center text-black font-bold mb-2">Create a new course</h3>
-                <CreateCourseForm />
-                </div>
-              </DialogDescription>
-          </DialogContent>
-        </Dialog>
+      <CreateCourseDialog />
       </div>
       <Table>
         <TableCaption>A list of courses.</TableCaption>

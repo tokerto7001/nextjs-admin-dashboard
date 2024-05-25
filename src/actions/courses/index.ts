@@ -1,6 +1,9 @@
 "use server";
 
 import { db } from "@/db";
+import { generateString } from "@/utils/generateString";
+import { writeFile } from "fs/promises";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export interface CreateCourseFormState {
@@ -56,10 +59,12 @@ export async function createCourse(
       },
     };
 
+    const { title: validatedTitle, description: validatedDescription, duration: validatedDuration, image: validatedImage } = validationResult.data;
+
     try{
         const courseExists = await db.course.findFirst({
             where: {
-                title: validationResult.data.title
+                title: validatedTitle
             }
         });
     
@@ -69,6 +74,19 @@ export async function createCourse(
             },
             success: false
         };
+
+        const imageName = generateString();
+        const imageExtension = validatedImage.type.split('/')[1];
+
+        await writeFile(`public/${imageName}.${imageExtension}`, Buffer.from(await validatedImage.arrayBuffer()));
+        await db.course.create({
+            data: {
+                title: validatedTitle,
+                description: validatedDescription,
+                duration: validatedDuration,
+                imageName: `${imageName}.${imageExtension}`
+            }
+        });
     } catch(err) {
         return {
             success: false,
@@ -78,7 +96,9 @@ export async function createCourse(
         }
     }
 
+    revalidatePath('/courses');
   return {
     error: {},
+    success: true
   };
 }
