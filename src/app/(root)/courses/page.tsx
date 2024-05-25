@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import CreateCourseForm from "@/components/courses/create-course-form";
 
 export default async function CoursesPage() {
   const courses = await db.course.findMany({
@@ -36,15 +37,18 @@ export default async function CoursesPage() {
     <div className="p-5 mt-3">
       <div className="flex justify-end mb-4">
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button>Add Course</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create a new course</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+              <DialogTitle className="text-center">
+                Create a new course
+              </DialogTitle>
+              <DialogDescription asChild>
+                <div className="h-96 p-5 flex justify-center">
+                  <CreateCourseForm />
+                </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
