@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { convertStoM } from "@/utils/convertStoM";
+import DeleteCourseDialog from "@/components/courses/delete-course-dialog";
 
 interface CoursePageProps {
   params: {
@@ -43,7 +44,11 @@ export default async function CoursePage({ params }: CoursePageProps) {
   });
 
   return (
-    <div className="m-20 flex justify-between">
+    <div className="w-[90%] p-5">
+    <div className="flex justify-end">
+      <DeleteCourseDialog id={+id}/>
+    </div>
+    <div className="mt-10 flex justify-between">
       <Card className="w-96 h-96 shadow-lg">
         <CardHeader>
           <CardTitle className="text-center">{course.title}</CardTitle>
@@ -73,16 +78,17 @@ export default async function CoursePage({ params }: CoursePageProps) {
         <CardContent>
             <div className="flex flex-col gap-3 p-2 over">
             {
-                enrolledUsers.length && enrolledUsers.map((enrolledUser) => (
+                enrolledUsers.length ? enrolledUsers.map((enrolledUser) => (
                         <div key={enrolledUser.id} className="flex justify-between">
                             <p>{enrolledUser.user.email}</p>
                             <p>{enrolledUser.isCompleted ? 'Completed' : 'Uncompleted'}</p>
                         </div>
-                ))
+                )) : <p>There is no user enrolled this course</p>
             }
             </div>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

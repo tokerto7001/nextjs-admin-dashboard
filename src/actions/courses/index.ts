@@ -2,8 +2,9 @@
 
 import { db } from "@/db";
 import { generateString } from "@/utils/generateString";
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 export interface CreateCourseFormState {
@@ -101,4 +102,32 @@ export async function createCourse(
     error: {},
     success: true
   };
+}
+
+export async function deleteCourse(id: number): Promise<void>{
+  try{
+    await db.$transaction(async(tx) => {
+      await tx.userCourses.deleteMany({
+        where: {
+          courseId: id
+        }
+      });
+      const course = await tx.course.findFirst({
+        where: {
+          id
+        }
+      });
+      await unlink(`./public/${course?.imageName}`);
+      await tx.course.delete({
+        where: {
+          id
+        }
+      });
+    });
+  }catch(err) {
+    console.log(err);
+  }
+
+  revalidatePath('/courses');
+  redirect('/courses')
 }
