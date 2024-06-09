@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import { generateString } from "@/utils/generateString";
+import { User } from "@prisma/client";
 import { writeFile, unlink } from "fs/promises";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -130,4 +131,41 @@ export async function deleteCourse(id: number): Promise<void>{
 
   revalidatePath('/courses');
   redirect('/courses')
+}
+
+const getUsersSchema = z.object({
+  email: z.string(),
+  courseId: z.number()
+})
+export async function getUsers(email: string, courseId: number): Promise<Pick<User, 'email' | 'id'>[]> {
+  try{
+    const validationResult = getUsersSchema.safeParse({email, courseId});
+    if(!validationResult.success) {
+      console.log(validationResult.error)
+      throw Error(validationResult.error.flatten().fieldErrors.email?.toString());
+    }
+
+    const users = await db.user.findMany({
+      where: {
+        email: {
+          startsWith: email,
+        },
+        courses: {
+          none: {
+            courseId
+          }
+        }
+      },
+      select: {
+        id: true,
+        email: true
+      },
+      take: 5
+    });
+    
+    return users;
+
+  }catch(err: any){
+    throw err;
+  }
 }

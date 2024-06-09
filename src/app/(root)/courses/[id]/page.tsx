@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { convertStoM } from "@/utils/convertStoM";
 import DeleteCourseDialog from "@/components/courses/delete-course-dialog";
+import EnrollUserDialog from "@/components/courses/enroll-user-dialog";
 
 interface CoursePageProps {
   params: {
@@ -44,12 +45,13 @@ export default async function CoursePage({ params }: CoursePageProps) {
   });
 
   return (
-    <div className="w-[90%] p-5">
-    <div className="flex justify-end">
+    <div className="p-5">
+    <div className="flex justify-end gap-3">
+      <EnrollUserDialog courseId={+id} />
       <DeleteCourseDialog id={+id}/>
     </div>
     <div className="mt-10 flex justify-between">
-      <Card className="w-96 h-96 shadow-lg">
+      <Card className="w-[40%] h-96 shadow-lg">
         <CardHeader>
           <CardTitle className="text-center">{course.title}</CardTitle>
           <CardDescription className="flex justify-center items-center">
@@ -71,7 +73,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           <p>{convertStoM(course.duration)}</p>
         </CardContent>
       </Card>
-      <Card className="w-96 h-96 shadow-lg overflow-scroll no-scrollbar">
+      <Card className="w-[40%] h-96 shadow-lg overflow-scroll no-scrollbar">
         <CardHeader>
           <CardTitle className="text-center">Enrolled Users</CardTitle>
         </CardHeader>
