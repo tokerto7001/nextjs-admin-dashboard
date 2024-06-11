@@ -133,13 +133,13 @@ export async function deleteCourse(id: number): Promise<void>{
   redirect('/courses')
 }
 
-const getUsersSchema = z.object({
+const getUnenrolledUsersSchema = z.object({
   email: z.string(),
   courseId: z.number()
 })
-export async function getUsers(email: string, courseId: number): Promise<Pick<User, 'email' | 'id'>[]> {
+export async function getUnenrolledUsers(email: string, courseId: number): Promise<Pick<User, 'email' | 'id'>[]> {
   try{
-    const validationResult = getUsersSchema.safeParse({email, courseId});
+    const validationResult = getUnenrolledUsersSchema.safeParse({email, courseId});
     if(!validationResult.success) {
       console.log(validationResult.error)
       throw Error(validationResult.error.flatten().fieldErrors.email?.toString());
@@ -167,5 +167,91 @@ export async function getUsers(email: string, courseId: number): Promise<Pick<Us
 
   }catch(err: any){
     throw err;
+  }
+}
+
+const enrollUserToCourseSchema = z.object({
+  userId: z.number(),
+  courseId: z.number()
+});
+interface EnrollUserToCourseFormState {
+  error: {
+    courseId?: string[];
+    userId?: string[];
+    _form?: string[];
+  }
+  success?: {
+    message: string;
+  }
+}
+export async function enrollUserToCourse(courseId: number, userId?: number, ): Promise<EnrollUserToCourseFormState>{
+  try{
+    const validationResult = enrollUserToCourseSchema.safeParse({userId, courseId});
+    if(!validationResult.success) {
+      return {
+        error: {
+          ...validationResult.error.flatten().fieldErrors,
+          _form: validationResult.error.flatten().formErrors,
+        },
+      }
+    }
+  
+    const user = await db.user.findFirst({
+      where: {
+        id: userId
+      }
+    });
+    if(!user) return {
+      error: {
+        userId: ['User not found!']
+      }
+    }
+  
+    const course = await db.course.findFirst({
+      where: {
+        id: courseId
+      }
+    });
+    if(!course) return {
+      error: {
+        userId: ['Course not found!']
+      }
+    }
+
+    const userRecord = await db.userCourses.findFirst({
+      where: {
+        courseId: validationResult.data.courseId,
+        userId: validationResult.data.userId
+      }
+    });
+    if(userRecord) {
+      return {
+        error: {
+          _form: ['User already enrolled!']
+        }
+      }
+    };
+    
+    await db.userCourses.create({
+      data: {
+        courseId: validationResult.data.courseId,
+        userId: validationResult.data.userId
+      }
+    });
+  
+  }catch(err: any) {
+    return {
+      error: {
+        _form: ['Something went wrong'!]
+      }
+    }
+  }
+
+  revalidatePath(`/courses/${courseId}`);
+  return {
+    error: {},
+    success: {
+      message: 'User enrolled successfully!'
+    }
   }
 }

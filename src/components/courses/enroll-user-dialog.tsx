@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import * as actions from "../../actions/courses";
 import useDebounce from "@/hooks/useDebounce";
+import { useFormState } from "react-dom";
 
 interface UserObject {
   id: number;
@@ -19,20 +20,22 @@ interface UserObject {
 }
 
 interface EnrollUserDialog {
-    courseId: number;
+  courseId: number;
 }
 
-export default function EnrollUserDialog({courseId}: EnrollUserDialog) {
+export default function EnrollUserDialog({ courseId }: EnrollUserDialog) {
   const [searchInput, setSearchInput] = useState("");
   const [fetchedUsers, setFetchedUsers] = useState<UserObject[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserObject | null>(null);
+  const [dialogStatus, setDialogStatus] = useState(false);
 
   const debouncedInput = useDebounce<string>(searchInput, 500);
+  const [formState, enrollUserToCourseAction] = useFormState(actions.enrollUserToCourse.bind(null, courseId, selectedUser?.id), {error: {}});
 
   async function getUsers() {
     try {
       if (searchInput) {
-        const users = await actions.getUsers(searchInput, courseId);
+        const users = await actions.getUnenrolledUsers(searchInput, courseId);
         setFetchedUsers(users);
       } else {
         setFetchedUsers([]);
@@ -45,6 +48,29 @@ export default function EnrollUserDialog({courseId}: EnrollUserDialog) {
     }
   }
 
+  function handleDialog(){
+    setSearchInput("");
+    setSelectedUser(null);
+    setDialogStatus(!dialogStatus);
+  }
+
+  useEffect(() => {
+    if(formState) {
+      if(!formState.success) {
+        toast({
+          description: formState.error.userId?.toString() || formState.error.courseId?.toString() || formState.error._form?.toString() || 'Something went wrong!',
+          variant: 'destructive'
+        })
+      }else {
+        toast({
+          description: formState.success.message,
+          variant: 'success'
+        });
+        setDialogStatus(false);
+      }
+    }
+
+  }, [formState]);
 
   useEffect(() => {
     getUsers();
@@ -52,12 +78,12 @@ export default function EnrollUserDialog({courseId}: EnrollUserDialog) {
 
   useEffect(() => {
     setFetchedUsers([]);
-    setSearchInput('');
+    setSearchInput("");
   }, [selectedUser]);
 
   return (
     <div>
-      <Dialog onOpenChange={() => setSearchInput('')}>
+      <Dialog onOpenChange={handleDialog} open={dialogStatus}>
         <DialogTrigger asChild>
           <Button>Enroll User</Button>
         </DialogTrigger>
@@ -67,17 +93,24 @@ export default function EnrollUserDialog({courseId}: EnrollUserDialog) {
               <h3 className="text-center text-black font-bold mb-2">
                 Select User
               </h3>
-              <Input
-                placeholder="Search email"
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
+              {!selectedUser ? (
+                <Input
+                  placeholder="Search email"
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+              ) : null}
               <div className="h-[40%]">
                 {selectedUser ? (
                   <div className="text-lg flex justify-between pt-2">
                     <span>{selectedUser.email}</span>
-                    <span onClick={() => setSelectedUser(null)} className="text-red-500 cursor-pointer">X</span>
+                    <span
+                      onClick={() => setSelectedUser(null)}
+                      className="text-red-500 cursor-pointer"
+                    >
+                      X
+                    </span>
                   </div>
                 ) : (
                   fetchedUsers.map((user) => (
@@ -92,8 +125,8 @@ export default function EnrollUserDialog({courseId}: EnrollUserDialog) {
                 )}
               </div>
               <div className="flex justify-between">
-                <form action="sada">
-                  <Button type="submit">Enroll</Button>
+                <form action={enrollUserToCourseAction}>
+                  <Button type="submit" disabled={!selectedUser}>Enroll</Button>
                 </form>
                 <DialogClose>
                   <Button variant="destructive">Cancel</Button>
