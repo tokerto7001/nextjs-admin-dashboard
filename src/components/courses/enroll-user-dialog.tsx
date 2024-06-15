@@ -56,12 +56,12 @@ export default function EnrollUserDialog({ courseId }: EnrollUserDialog) {
 
   useEffect(() => {
     if(formState) {
-      if(!formState.success) {
+      if(Object.keys(formState.error).length !== 0) {
         toast({
           description: formState.error.userId?.toString() || formState.error.courseId?.toString() || formState.error._form?.toString() || 'Something went wrong!',
           variant: 'destructive'
         })
-      }else {
+      }else if(formState.success) {
         toast({
           description: formState.success.message,
           variant: 'success'
